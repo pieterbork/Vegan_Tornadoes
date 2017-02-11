@@ -156,7 +156,7 @@ io.on('connection', function(socket) {
       matchQueue.push(users[sessionID]);
       callbacks[sessionID] = function (opponentID, gameID) {
         users[sessionID].gameID = gameID;
-        socket.emit('matched', opponentID);
+        socket.emit('matched', users[opponentID].name);
       };
     }
     else if (callbacks[sessionID]) {

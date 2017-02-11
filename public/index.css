@@ -2,6 +2,10 @@
   margin: 10px;
 }
 
+#opponent {
+  background: #0099FF;
+}
+
 .chat
 {
 	list-style: none;
@@ -83,4 +87,3 @@ body {
       opacity: .8;
       z-index: 1;
 }
-
