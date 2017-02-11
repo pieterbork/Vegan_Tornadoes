@@ -6,7 +6,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
 var path = require('path');
-// var im = require('imagemagick');
 var port = process.env.PORT || 8083;
 
 // stuff that came in handy before...
@@ -22,10 +21,7 @@ function queueInit() {
   mm.prefs.maxiters = 50;
 
   mm.policy = function(a,b) {
-      if(Math.abs(a.rank-b.rank) < 20)
-          return 100;
-      else
-          return 0;
+      return true;
   }
 
   //@TODO(alex): Check to see if users have left disconnected
@@ -67,7 +63,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', function(req, res){
   var sessionID = getSessionID(req, res);
   if (!users[sessionID]) {
-    users[sessionID] = { name: "No name", rank: 100, sessionID: sessionID };
+    users[sessionID] = { name: "No name", sessionID: sessionID };
   }
   res.sendFile(__dirname + '/index.html');
 });
