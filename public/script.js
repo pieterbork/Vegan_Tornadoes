@@ -1,5 +1,4 @@
 var name, id;
-var scrolled = false;
 
 function getDateTime() {
     var date = new Date();
@@ -20,20 +19,12 @@ $('form').submit(function(){
 socket.on('chat message', function(user, msg){
 	$('#chat').append('<li class=\"left clearfix\"><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">'+user+'</strong><small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>'+ getDateTime() +'</small></div><p>'+ "&nbsp&nbsp" + (msg) + '</p></div></li>');
 	updateScroll();
-	console.log(scrolled)
 });
 
 function updateScroll(){
-	if(!scrolled){
-		var element = document.getElementById("chatbox");
-		element.scrollTop = element.scrollHeight;
-		scrolled = false;
-	}
+	var element = document.getElementById("chatbox");
+	element.scrollTop = element.scrollHeight;
 }
-
-$("#chatbox").on('scroll', function(){
-	scrolled = true;
-});
 
 socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg));
