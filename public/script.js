@@ -14,11 +14,7 @@ $('form').submit(function(){
     return false;
 });
 
-socket.on('chat message', function(msg){$('#chat').append('<li class=\"left clearfix\"><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">Jack Black</strong><small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>'+ getDateTime() +'</small></div><p>'+ "&nbsp&nbsp" + (msg) + '</p></div></li>');});
-
-
-socket.on('chat message', function(msg){
-    $('#messages').append($('<li>').text(msg));
+socket.on('chat message', function(msg){$('#chat').append('<li class=\"left clearfix\"><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">Jack Black</strong><small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>'+ getDateTime() +'</small></div><p>'+ "&nbsp&nbsp" + (msg) + '</p></div></li>');
 });
 
 socket.on('matched', function(opponentID){
@@ -59,3 +55,4 @@ function new_game() {
 function play(m) {
     socket.emit('play', {move:m, cookies:document.cookie});
 }
+
