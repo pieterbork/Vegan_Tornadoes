@@ -12,26 +12,28 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 
 function queueInit() {
-  var mm = new Matchmaker;
+    var mm = new Matchmaker;
 
-  mm.prefs.checkinterval = 5000;
-  mm.prefs.threshold = 100;
-  mm.prefs.maxiters = 50;
+    mm.prefs.checkinterval = 5000;
+    mm.prefs.threshold = 100;
+    mm.prefs.maxiters = 50;
 
-  mm.policy = function(a,b) {
-      if(Maths.abs(a.rank-b.rank) < 20)
-          return 100
-      else
-          return 0
-  }
+    mm.policy = function(a,b) {
+        if(Maths.abs(a.rank-b.rank) < 20) {
+            return 100;
+        }
+        else {
+            return 0;
+        }
+    }
 
   //@TODO(alex): Check to see if users have left disconnected
-  mm.on('match', function(result) {
-      console.log(result.a + " has been matched with " + result.b)
-  });
+    mm.on('match', function(result) {
+        console.log(result.a + " has been matched with " + result.b);
+    });
 
-  mm.start();
-  return mm;
+    mm.start();
+    return mm;
 }
 
 matchQueue = queueInit();
@@ -53,15 +55,15 @@ app.get('/chat', function(req, res){
 });
 
 // Chat Stuff
-io.on('connection', function(socket){
-    socket.on('chat message', function(msg){
+io.on('connection', function(socket) {
+    socket.on('chat message', function(msg) {
         io.emit('chat message', msg);
     });
-    socket.on('button press', function(msg){
+    socket.on('button press', function(msg) {
         console.log('pressed');
     })
 });
 
-http.listen(port, function(){
+http.listen(port, function() {
     console.log(appName + ' is launched on port ' + port);
 });
