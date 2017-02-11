@@ -1,18 +1,15 @@
-// content of index.js
-const http = require('http')  
-const port = 3000
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-const requestHandler = (request, response) => {  
-  console.log(request.url)
-  response.end('Hello Node.js Server!')
-}
+app.get('/', function(req, res){
+    res.sendfile('index.html');
+});
 
-const server = http.createServer(requestHandler)
+io.on('connection', function(socket){
+    console.log('a user connected');
+});
 
-server.listen(port, (err) => {  
-  if (err) {
-    return console.log('something bad happened', err)
-  }
-
-  console.log(`server is listening on ${port}`)
-})
+http.listen(3000, function(){
+    console.log('listening on *:3000');
+});
