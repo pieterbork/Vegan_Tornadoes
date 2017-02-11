@@ -42,10 +42,11 @@ socket.on('draw', function(imagedata){
     img.src = src;
 });
 
-socket.on('game end', function(win) {
+socket.on('game over', function(win) {
     $('#no_game').css('display', '');
     $('#in_game').css('display', 'none');
-})
+    alert("You " + win + " !");
+});
 
 function new_game() {
     socket.emit('new game', document.cookie);
