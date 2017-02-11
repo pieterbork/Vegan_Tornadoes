@@ -1,6 +1,7 @@
 // server.js
 var appName = 'Vegan Tornadoes';
-var app = require('express')();
+var express  = require('express');
+var app      = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
@@ -45,6 +46,7 @@ matchQueue = queueInit();
 
 app.use(logger('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
