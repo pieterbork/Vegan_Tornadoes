@@ -1,6 +1,18 @@
+// server.js
+var appName = 'Vegan Tornadoes';
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var port = process.env.PORT || 8083;
+var path = require('path');
+
+// stuff that came in handy before...
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+
+
+app.use(logger('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
@@ -17,6 +29,6 @@ io.on('connection', function(socket){
             });
 });
 
-http.listen(3000, function(){
-    console.log('listening on *:3000');
+http.listen(port, function(){
+    console.log(appName + 'is launched on port ' + port);
 });
