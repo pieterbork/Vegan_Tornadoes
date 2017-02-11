@@ -12,7 +12,7 @@ function getDateTime() {
 
 var socket = io();
 $('form').submit(function(){
-    socket.emit('chat message', $('#m').val());
+    socket.emit('chat message', name, $('#m').val());
     $('#m').val('');
     return false;
 });
