@@ -1,3 +1,5 @@
+var name, id;
+
 function getDateTime() {
     var date = new Date();
     var hour = date.getHours();
@@ -14,7 +16,11 @@ $('form').submit(function(){
     return false;
 });
 
-socket.on('chat message', function(msg){$('#chat').append('<li class=\"left clearfix\"><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">Jack Black</strong><small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>'+ getDateTime() +'</small></div><p>'+ "&nbsp&nbsp" + (msg) + '</p></div></li>');
+socket.on('chat message', function(msg){$('#chat').append('<li class=\"left clearfix\"><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">Jack Black</strong><small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>'+ getDateTime() +'</small></div><p>'+ "&nbsp&nbsp" + (msg) + '</p></div></li>');});
+
+
+socket.on('chat message', function(msg){
+    $('#messages').append($('<li>').text(msg));
 });
 
 socket.on('matched', function(opponentID){
@@ -46,6 +52,7 @@ socket.on('game end', function(win) {
     $('#in_game').css('display', 'none');
 })
 
+
 function new_game() {
     socket.emit('new game', document.cookie);
     $('#no_game').css('display', 'none');
@@ -56,3 +63,8 @@ function play(m) {
     socket.emit('play', {move:m, cookies:document.cookie});
 }
 
+socket.on('name', function(n) {
+  name = n;
+});
+
+socket.emit('get name', document.cookie);
