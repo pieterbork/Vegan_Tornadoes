@@ -6,7 +6,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
 var path = require('path');
-var im = require('imagemagick');
 var port = process.env.PORT || 8083;
 
 // stuff that came in handy before...
