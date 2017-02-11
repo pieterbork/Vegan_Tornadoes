@@ -107,10 +107,10 @@ function parseID(cookies) {
 // Chat Stuff
 io.on('connection', function(socket) {
   // users[sessionID].socket = socket;
-  socket.on('chat message', function(msg){
+  socket.on('chat message', function(user, msg){
     l = xss(msg);
-    console.log("User said: "+ l);
-    io.emit('chat message', l);
+    console.log(user +" said: "+ l);
+    io.emit('chat message', user, l);
   });
   socket.on('new game', function(cookies){
     var sessionID = parseID(cookies);

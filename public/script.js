@@ -11,17 +11,12 @@ function getDateTime() {
 
 var socket = io();
 $('form').submit(function(){
-    socket.emit('chat message', $('#m').val());
+    socket.emit('chat message', name, $('#m').val());
     $('#m').val('');
     return false;
 });
 
-socket.on('chat message', function(msg){$('#chat').append('<li class=\"left clearfix\"><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">Jack Black</strong><small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>'+ getDateTime() +'</small></div><p>'+ "&nbsp&nbsp" + (msg) + '</p></div></li>');});
-
-
-socket.on('chat message', function(msg){
-    $('#messages').append($('<li>').text(msg));
-});
+socket.on('chat message', function(user, msg){$('#chat').append('<li class=\"left clearfix\"><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">'+user+'</strong><small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>'+ getDateTime() +'</small></div><p>'+ "&nbsp&nbsp" + (msg) + '</p></div></li>');});
 
 socket.on('matched', function(opponentID){
     alert("Matched with: " + opponentID);
