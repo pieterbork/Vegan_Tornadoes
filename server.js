@@ -100,7 +100,7 @@ adjectives = ["Sexy", "Fuzzy", "Purple", "Deadly", "Sparkly", "Flatulent", "Hidd
 
 
 nouns = ["Josh", "Sidewalk", "Pizza", "Tiger", "Turtle", "Water", "Ninja", "Pirate", "DJ", "Spaceship", "Eagle", "Carlos",
-        "Bottle", "Clock", "Eiffel Tower", "Sunglasses", "Wabbit", "Powerpoint"];
+        "Bottle", "Clock", "Eiffel Tower", "Sunglasses", "Wabbit", "Powerpoint", "Dragon"];
 app.get('/', function(req, res){
   var sessionID = getSessionID(req, res);
   if (!users[sessionID]) {
