@@ -8,7 +8,7 @@ var Matchmaker = require('matchmaker');
 var path = require('path');
 var port = process.env.PORT || 8083;
 
-// stuff that came in handy before...
+var xss = require('xss');
 var logger = require('morgan');
 var cookie = require('cookie');
 
@@ -75,7 +75,9 @@ app.get('/chat', function(req, res){
 // Chat Stuff
 io.on('connection', function(socket) {
     socket.on('chat message', function(msg){
-        io.emit('chat message', msg);
+        l = xss(msg);
+        console.log("User said: "+ l);
+        io.emit('chat message', l);
     });
     socket.on('new game', function(cookies){
       var sessionID = cookie.parse(cookies || '').sessionID;
