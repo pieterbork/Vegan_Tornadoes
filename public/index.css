@@ -58,6 +58,11 @@
     background-color: #555;
 }
 
+#board {
+    height: 75%;
+    width: 75%;
+}
+
 /*
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font: 13px Helvetica, Arial; }
@@ -67,4 +72,5 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #messages { list-style-type: none; margin: 0; padding: 0; }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
+
 */

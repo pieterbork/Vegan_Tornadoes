@@ -6,7 +6,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
 var path = require('path');
-var port = process.env.PORT || 8088;
+var port = process.env.PORT || 8083;
 
 // stuff that came in handy before...
 var logger = require('morgan');
@@ -21,17 +21,12 @@ function queueInit() {
   mm.prefs.maxiters = 50;
 
   mm.policy = function(a,b) {
-      if(Math.abs(a.rank-b.rank) < 20)
-          return 100;
-      else
-          return 0;
+      return true;
   }
 
   //@TODO(alex): Check to see if users have left disconnected
   mm.on('match', function(result) {
-    console.log(`Pinging ${result.a.sessionID} with ${result.b.sessionID}`)
     callbacks[result.a.sessionID](result.b.sessionID);
-    console.log(`Pinging ${result.b.sessionID} with ${result.a.sessionID}`)
     callbacks[result.b.sessionID](result.a.sessionID);
     // console.log(result.a.sessionID + " has been matched with " + result.b.sessionID);
   });
@@ -68,7 +63,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', function(req, res){
   var sessionID = getSessionID(req, res);
   if (!users[sessionID]) {
-    users[sessionID] = { name: "No name", rank: 100, sessionID: sessionID };
+    users[sessionID] = { name: "No name", sessionID: sessionID };
   }
   res.sendFile(__dirname + '/index.html');
 });
@@ -85,10 +80,8 @@ io.on('connection', function(socket) {
     socket.on('new game', function(cookies){
       var sessionID = cookie.parse(cookies || '').sessionID;
       if (users[sessionID]) {
-        console.log(`Adding user ${sessionID} (${users[sessionID]}) to the queue`);
         matchQueue.push(users[sessionID]);
         callbacks[sessionID] = function (opponentID) {
-          console.log(`Emitting ${opponentID}`);
           socket.emit('matched', opponentID);
         };
       }
@@ -98,7 +91,7 @@ io.on('connection', function(socket) {
     });
     socket.on('button press', function(msg){
         console.log('pressed');
-    })
+    });
 });
 
 http.listen(port, function() {
