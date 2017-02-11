@@ -6,7 +6,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
 var path = require('path');
-var port = process.env.PORT || 8093;
+var port = process.env.PORT || 8083;
 
 var xss = require('xss');
 var logger = require('morgan');
