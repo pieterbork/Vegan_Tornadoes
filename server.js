@@ -6,7 +6,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
 var path = require('path');
-var port = process.env.PORT || 8087;
+var port = process.env.PORT || 8088;
 
 // stuff that came in handy before...
 var logger = require('morgan');
@@ -29,7 +29,9 @@ function queueInit() {
 
   //@TODO(alex): Check to see if users have left disconnected
   mm.on('match', function(result) {
+    console.log(`Pinging ${result.a.sessionID} with ${result.b.sessionID}`)
     callbacks[result.a.sessionID](result.b.sessionID);
+    console.log(`Pinging ${result.b.sessionID} with ${result.a.sessionID}`)
     callbacks[result.b.sessionID](result.a.sessionID);
     // console.log(result.a.sessionID + " has been matched with " + result.b.sessionID);
   });
@@ -40,21 +42,21 @@ function queueInit() {
 
 function getSessionID(req, res) {
   var cookies = cookie.parse(req.headers.cookie || '');
-  var name = cookies.sessionID;
-  if (!name) {
+  var sessionID = cookies.sessionID;
+  if (!sessionID) {
     // random number
-    name = String(Math.random()).substring(2);
-
-    res.setHeader('Set-Cookie', cookie.serialize('sessionID', name, {
-      httpOnly: true,
-      maxAge: 60 * 60 // 1 hour
-    }));
-
+    sessionID = String(Math.random()).substring(2);
     // Redirect back after setting cookie
     res.statusCode = 302;
     res.setHeader('Location', req.headers.referer || '/');
   }
-  return name;
+  console.log('sessionID: ' + sessionID)
+  res.setHeader('Set-Cookie', cookie.serialize('sessionID', sessionID, {
+    httpOnly: false,
+    maxAge: 60 * 60 // 1 hour
+  }));
+
+  return sessionID;
 }
 
 matchQueue = queueInit();
@@ -80,9 +82,19 @@ io.on('connection', function(socket) {
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
     });
-    socket.on('new game', function(sessionID){
-      matchQueue.push(users[sessionID]);
-      callbacks[sessionID] = (opponentID) => { io.emit('matched', opponentID); }
+    socket.on('new game', function(cookies){
+      var sessionID = cookie.parse(cookies || '').sessionID;
+      if (users[sessionID]) {
+        console.log(`Adding user ${sessionID} (${users[sessionID]}) to the queue`);
+        matchQueue.push(users[sessionID]);
+        callbacks[sessionID] = function (opponentID) {
+          console.log(`Emitting ${opponentID}`);
+          socket.emit('matched', opponentID);
+        };
+      }
+      else {
+        socket.emit('invalid cookie');
+      }
     });
     socket.on('button press', function(msg){
         console.log('pressed');

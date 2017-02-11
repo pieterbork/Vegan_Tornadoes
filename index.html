@@ -8,6 +8,8 @@
   </head>
   <body>
     <button type="button" class="btn btn-warning" onclick="socket.emit('button press');">RNGesus take the wheel</button>
+    <br/>
+    <button type="button" class="btn btn-warning" onclick="socket.emit('new game', document.cookie);">New game</button>
   </head>
   <body>
     <div style="float: right; width: 50%">
@@ -27,6 +29,12 @@
       });
       socket.on('chat message', function(msg){
         $('#messages').append($('<li>').text(msg));
+      });
+      socket.on('matched', function(opponentID){
+        alert("Matched with: " + opponentID);
+      });
+      socket.on('invalid cookie', function() {
+        alert("Invalid cookie!");
       });
       socket.on('button press', function(){
         $('messages').append('Button Pressed');
