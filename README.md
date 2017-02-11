@@ -1,2 +1,3 @@
 # Vegan_Tornadoes
-Repository for Applied Trust Hackathon
+
+Repository for the winning team of the Applied Trust Hackathon
