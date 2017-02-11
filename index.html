@@ -18,6 +18,13 @@
   </head>
   <body>
     <button type="button" class="btn btn-warning" onclick="socket.emit('button press');">RNGesus take the wheel</button>
+  </head>
+  <body>
+    <div sty="float: left; width: 50%">
+        <center>
+            <button onclick="socket.emit('button press');">RNGesus take the wheel</button>
+        </center>
+    </div>
     <div style="float: right; width: 50%">
     <ul id="messages"></ul>
     <form action="">
@@ -40,5 +47,6 @@
         $('messages').append('Button Pressed');
       })
     </script>
+  <link rel="stylesheet" href="index.css">
   </body>
 </html>
