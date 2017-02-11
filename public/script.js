@@ -1,5 +1,12 @@
 var name, id;
 
+$(document).ready(function(){
+	var h = $(document).height();
+	document.getElementById("chatbox").height(h * .7)
+	console.log(h);
+	console.log(h * .7);
+});
+
 function getDateTime() {
     var date = new Date();
     var hour = date.getHours();
