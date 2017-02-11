@@ -64,6 +64,10 @@ ul
 	width: 75%;
 }
 
+html {
+	height: 100%;
+}
+
 body {
       -moz-transform: scale(1.125);
       -webkit-transform: scale(1.125);
@@ -80,3 +84,4 @@ body {
       opacity: .8;
       z-index: 1;
 }
+
