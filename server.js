@@ -38,7 +38,9 @@ function queueInit() {
   mm.on('match', function(result) {
     gameID = games.push(new Game(result.a, result.b)) - 1;
     callbacks[result.a.sessionID](result.b.sessionID, gameID);
+    callbacks[result.a.sessionID] = undefined;
     callbacks[result.b.sessionID](result.a.sessionID, gameID);
+    callbacks[result.b.sessionID] = undefined;
   });
 
   mm.start();
@@ -69,8 +71,14 @@ function getGame(sid) {
     return games[users[sid].gameID];
   }
   else {
-
+    // oops
   }
+}
+
+function deleteGame(sid) {
+    if(users[sid]) {
+      games.splice(users[sid].gameID, 1);
+    }
 }
 
 function getOpponent(sid) {
@@ -106,6 +114,34 @@ function parseID(cookies) {
   return cookie.parse(cookies || '').sessionID;
 }
 
+function rps(m1, m2) {
+  if (m1 == 'rock') {
+    if (m2 == 'rock') {
+      return 0;
+    } else if (m2 == 'paper') {
+      return 2;
+    } else {
+      return 1;
+    }
+  } else if (m1 == 'paper') {
+    if (m2 == 'rock') {
+      return 1;
+    } else if (m2 == 'paper') {
+      return 0;
+    } else {
+      return 2;
+    }
+  } else {
+    if (m2 == 'rock') {
+      return 2;
+    } else if (m2 == 'paper') {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
+
 // Chat Stuff
 io.on('connection', function(socket) {
   // users[sessionID].socket = socket;
@@ -138,12 +174,17 @@ io.on('connection', function(socket) {
     game = getGame(sessionID);
     if (sessionID == game.p1.sessionID) {
       game.m1 = data.move;
+      game.s1 = socket;
     } else {
       game.m2 = data.move;
+      game.s2 = socket;
     }
-    console.log(JSON.stringify(game));
-  });
-  socket.on('heartbeat', function(id) {
+    if (game.m1 && game.m2) {
+      winner = rps(game.m1, game.m2);
+      game.s1.emit('game over', winner == 0 ? 'tied': winner == 1 ? 'won': 'lost');
+      game.s2.emit('game over', winner == 0 ? 'tied': winner == 2 ? 'won': 'lost');
+      deleteGame(sessionID);
+    }
   });
   socket.on('get name', function(cookies) {
     var id = parseID(cookies);
