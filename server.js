@@ -79,7 +79,7 @@ io.on('connection', function(socket) {
     });
     socket.on('new game', function(cookies){
       var sessionID = cookie.parse(cookies || '').sessionID;
-      if (users[sessionID]) {
+      if (users[sessionID] && !callbacks[sessionID]) {
         matchQueue.push(users[sessionID]);
         callbacks[sessionID] = function (opponentID) {
           socket.emit('matched', opponentID);
