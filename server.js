@@ -38,7 +38,9 @@ function queueInit() {
   mm.on('match', function(result) {
     gameID = games.push(new Game(result.a, result.b)) - 1;
     callbacks[result.a.sessionID](result.b.sessionID, gameID);
+    callbacks[result.a.sessionID] = undefined;
     callbacks[result.b.sessionID](result.a.sessionID, gameID);
+    callbacks[result.b.sessionID] = undefined;
   });
 
   mm.start();
@@ -55,7 +57,6 @@ function getSessionID(req, res) {
     // res.statusCode = 302;
     // res.setHeader('Location', req.headers.referer || '/');
   }
-  console.log('sessionID: ' + sessionID)
   res.setHeader('Set-Cookie', cookie.serialize('sessionID', sessionID, {
     httpOnly: false,
     maxAge: 60 * 60 // 1 hour
@@ -65,8 +66,6 @@ function getSessionID(req, res) {
 }
 
 function getGame(sid) {
-  console.log(sid);
-  console.log(users);
   if(users[sid]) {
     return games[users[sid].gameID];
   }
@@ -109,7 +108,6 @@ app.get('/chat', function(req, res){
 });
 
 function parseID(cookies) {
-  console.log(cookies);
   return cookie.parse(cookies || '').sessionID;
 }
 
@@ -145,7 +143,6 @@ function rps(m1, m2) {
 io.on('connection', function(socket) {
     socket.on('chat message', function(msg){
         l = xss(msg);
-        console.log("User said: "+ l);
         io.emit('chat message', l);
     });
 
@@ -162,9 +159,6 @@ io.on('connection', function(socket) {
         console.log("Somebody left the 'new game' button on the page after it's been pressed!")
       }
       else {
-        console.log(users);
-        console.log(sessionID);
-        console.log(callbacks);
         socket.emit('invalid cookie');
       }
     });
@@ -182,13 +176,12 @@ io.on('connection', function(socket) {
         winner = rps(game.m1, game.m2);
         game.s1.emit('game over', winner == 0 ? 'tied': winner == 1 ? 'won': 'lost');
         game.s2.emit('game over', winner == 0 ? 'tied': winner == 2 ? 'won': 'lost');
-        
+        deleteGame(sessionID);
       }
     });
     socket.on('heartbeat', function(id) {
     });
     socket.on('button press', function(msg) {
-        console.log('pressed');
     });
 });
 

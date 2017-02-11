@@ -19,7 +19,9 @@ socket.on('chat message', function(msg){
 });
 
 socket.on('matched', function(opponentID){
-    alert("Matched with: " + opponentID);
+  $('#no_game').css('display', 'none');
+  $('#in_game').css('display', '');
+  $('#waiting').css('display', 'none');
 });
 
 socket.on('invalid cookie', function() {
@@ -43,17 +45,34 @@ socket.on('draw', function(imagedata){
 });
 
 socket.on('game over', function(win) {
-    $('#no_game').css('display', '');
-    $('#in_game').css('display', 'none');
-    alert("You " + win + " !");
+  $('#no_game').css('display', '');
+  $('#in_game').css('display', 'none');
+  $('#waiting').css('display', 'none');
+  $('#outcome').css('display', '');
+  $('#outcome').text("You " + win + "!");
 });
 
 function new_game() {
     socket.emit('new game', document.cookie);
+    $('#outcome').css('display', 'none');
     $('#no_game').css('display', 'none');
-    $('#in_game').css('display', '');
+    $('#in_game').css('display', 'none');
+    $('#waiting').css('display', '');
+    $('#rock').css('display', '');
+    $('#paper').css('display', '');
+    $('#scissors').css('display', '');
+
 }
 
 function play(m) {
-    socket.emit('play', {move:m, cookies:document.cookie});
+  if (m != 'rock') {
+    $('#rock').css('display', 'none');
+  }
+  if (m != 'paper') {
+    $('#paper').css('display', 'none');
+  }
+  if (m != 'scissors') {
+    $('#scissors').css('display', 'none');
+  }
+  socket.emit('play', {move:m, cookies:document.cookie});
 }

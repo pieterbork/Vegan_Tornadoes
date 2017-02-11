@@ -13,16 +13,20 @@
         <div id="no_game">
           <button type="button" class="btn btn-warning" onclick="new_game();">New game</button>
         </div>
-        <div id="in_game" style="display: inline-block; display: none; top: 50%;">
-          <button type='button' class='btn btn-warning' onclick='play("rock");'>Rock</button>
-          <button type='button' class='btn btn-warning' onclick='play("paper");'>Paper</button>
-          <button type='button' class='btn btn-warning' onclick='play("scissors");'>Scissors</button>
+        <div id="waiting" style="display: none;">
+          <button class='btn btn-warning'>Looking for game...</button>
         </div>
+        <div id="in_game" style="display: none;">
+          <button type='button' id='rock' class='btn btn-warning' onclick='play("rock");'>Rock</button>
+          <button type='button' id='paper' class='btn btn-warning' onclick='play("paper");'>Paper</button>
+          <button type='button' id='scissors' class='btn btn-warning' onclick='play("scissors");'>Scissors</button>
+        </div>
+        <button type='button' id='outcome' class='btn btn-warning' style='display: none;'></button>
       </div>
     </div>
     <div style="float: right; width: 50%">
 <div class="container">
-    <div class="row">g
+    <div class="row">
         <div class="col-md-5">
             <div class="panel panel-primary">
                 <div class="panel-heading" id="accordion">
