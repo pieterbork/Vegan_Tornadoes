@@ -86,8 +86,8 @@ function getOpponent(sid) {
 app.use(logger('dev')); // log every request to the console
 app.use(express.static(path.join(__dirname, 'public')));
 
-adjectives = ["Sexy", "Fuzzy", "Purple", "Deadly", "Sparkly", "Flatulent", "Hidden", "Crouching", "Dishonorable", "Tiny"]
-nouns = ["Josh", "Sidewalk", "Pizza", "Tiger", "Turtle", "Water", "Ninja", "Pirate", "DJ", "Spaceship", "Eagle"];
+adjectives = ["Sexy", "Fuzzy", "Purple", "Deadly", "Sparkly", "Flatulent", "Hidden", "Crouching", "Dishonorable", "Tiny", "Chunky", "Bubbly", "Lame", "Dashing", "Creepy", "Beautiful", "Luxurious", "Fancy", "Cute"]
+nouns = ["Josh", "Sidewalk", "Pizza", "Tiger", "Turtle", "Water", "Ninja", "Pirate", "DJ", "Spaceship", "Eagle", "Carlos"];
 app.get('/', function(req, res){
   var sessionID = getSessionID(req, res);
   if (!users[sessionID]) {
