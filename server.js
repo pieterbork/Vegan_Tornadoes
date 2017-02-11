@@ -6,7 +6,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
 var path = require('path');
-var port = process.env.PORT || 8083;
+var port = process.env.PORT || 8093;
 
 var xss = require('xss');
 var logger = require('morgan');
@@ -106,46 +106,52 @@ function parseID(cookies) {
 
 // Chat Stuff
 io.on('connection', function(socket) {
-    socket.on('chat message', function(msg){
-        l = xss(msg);
-        console.log("User said: "+ l);
-        io.emit('chat message', l);
-    });
-
-    socket.on('new game', function(cookies){
-      var sessionID = parseID(cookies);
-      if (users[sessionID] && !callbacks[sessionID]) {
-        matchQueue.push(users[sessionID]);
-        callbacks[sessionID] = function (opponentID, gameID) {
-          users[sessionID].gameID = gameID;
-          socket.emit('matched', opponentID);
-        };
-      }
-      else if (callbacks[sessionID]) {
-        console.log("Somebody left the 'new game' button on the page after it's been pressed!")
-      }
-      else {
-        console.log(users);
-        console.log(sessionID);
-        console.log(callbacks);
-        socket.emit('invalid cookie');
-      }
-    });
-    socket.on('play', function(data) {
-      sessionID = parseID(data.cookies);
-      game = getGame(sessionID);
-      if (sessionID == game.p1.sessionID) {
-        game.m1 = data.move;
-      } else {
-        game.m2 = data.move;
-      }
-      console.log(JSON.stringify(game));
-    });
-    socket.on('heartbeat', function(id) {
-    });
-    socket.on('button press', function(msg) {
-        console.log('pressed');
-    });
+  // users[sessionID].socket = socket;
+  socket.on('chat message', function(msg){
+    l = xss(msg);
+    console.log("User said: "+ l);
+    io.emit('chat message', l);
+  });
+  socket.on('new game', function(cookies){
+    var sessionID = parseID(cookies);
+    if (users[sessionID] && !callbacks[sessionID]) {
+      matchQueue.push(users[sessionID]);
+      callbacks[sessionID] = function (opponentID, gameID) {
+        users[sessionID].gameID = gameID;
+        socket.emit('matched', opponentID);
+      };
+    }
+    else if (callbacks[sessionID]) {
+      console.log("Somebody left the 'new game' button on the page after it's been pressed!")
+    }
+    else {
+      console.log(users);
+      console.log(sessionID);
+      console.log(callbacks);
+      socket.emit('invalid cookie');
+    }
+  });
+  socket.on('play', function(data) {
+    sessionID = parseID(data.cookies);
+    game = getGame(sessionID);
+    if (sessionID == game.p1.sessionID) {
+      game.m1 = data.move;
+    } else {
+      game.m2 = data.move;
+    }
+    console.log(JSON.stringify(game));
+  });
+  socket.on('heartbeat', function(id) {
+  });
+  socket.on('get name', function(cookies) {
+    var id = parseID(cookies);
+    if(users[id]) {
+      socket.emit('name', users[id].name);
+    }
+  });
+  socket.on('button press', function(msg) {
+    console.log('pressed');
+  });
 });
 
 http.listen(port, function() {

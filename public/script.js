@@ -1,3 +1,5 @@
+var name, id;
+
 function getDateTime() {
     var date = new Date();
     var hour = date.getHours();
@@ -50,6 +52,7 @@ socket.on('game end', function(win) {
     $('#in_game').css('display', 'none');
 })
 
+
 function new_game() {
     socket.emit('new game', document.cookie);
     $('#no_game').css('display', 'none');
@@ -59,3 +62,9 @@ function new_game() {
 function play(m) {
     socket.emit('play', {move:m, cookies:document.cookie});
 }
+
+socket.on('name', function(n) {
+  name = n;
+});
+
+socket.emit('get name', document.cookie);
