@@ -4,6 +4,7 @@
   "description": "something something",
   "dependencies": {
     "express": "^4.14.1",
+    "matchmaker": "^0.1.0",
     "socket.io": "^1.7.2"
   }
 }
