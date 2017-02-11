@@ -89,8 +89,8 @@ io.on('connection', function(socket) {
         socket.emit('invalid cookie');
       }
     });
-    socket.on('button press', function(msg){
-        console.log('pressed');
+    socket.on('play', function(data) {
+      
     });
 });
 
