@@ -101,6 +101,7 @@ io.on('connection', function(socket) {
         l = xss(msg);
         console.log("User said: "+ l);
         io.emit('chat message', l);
+    });
 
     socket.on('new game', function(cookies){
       var sessionID = cookie.parse(cookies || '').sessionID;
