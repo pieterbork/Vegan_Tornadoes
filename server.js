@@ -1,6 +1,7 @@
 // server.js
 var appName = 'Vegan Tornadoes';
-var app = require('express')();
+var express  = require('express');
+var app      = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
@@ -60,6 +61,7 @@ matchQueue = queueInit();
 users = {};
 
 app.use(logger('dev')); // log every request to the console
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
   var sessionID = getSessionID(req, res);
@@ -87,6 +89,6 @@ io.on('connection', function(socket) {
     })
 });
 
-http.listen(port, function(){
+http.listen(port, function() {
     console.log(appName + ' is launched on port ' + port);
 });
