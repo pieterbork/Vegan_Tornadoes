@@ -86,12 +86,14 @@ function getOpponent(sid) {
 app.use(logger('dev')); // log every request to the console
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-names = ["Josh", "Joe", "Foo", "Bar"];
+adjectives = ["Sexy", "Fuzzy", "Purple", "Deadly", "Sparkly", "Flatulent", "Hidden", "Crouching", "Dishonorable", "Tiny"]
+nouns = ["Josh", "Sidewalk", "Pizza", "Tiger", "Turtle", "Water", "Ninja", "Pirate", "DJ", "Spaceship", "Eagle"];
 app.get('/', function(req, res){
   var sessionID = getSessionID(req, res);
   if (!users[sessionID]) {
-    users[sessionID] = { name: names[Math.floor(Math.random() * (names.length))], sessionID: sessionID };
+    noun = nouns[Math.floor(Math.random() * (nouns.length))]
+    adj = adjectives[Math.floor(Math.random() * (adjectives.length))]
+    users[sessionID] = { name: adj + " " + noun, sessionID: sessionID };
   }
   res.sendFile(__dirname + '/index.html');
 });
