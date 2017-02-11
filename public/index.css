@@ -38,7 +38,6 @@ ul
 {
 	overflow-y: scroll;
 	height: 250px;
->>>>>>> 0a8e55c06c3026270dcbd66bde697c43f5242ab5
 }
 
 ::-webkit-scrollbar-track
@@ -66,6 +65,7 @@ ul
 
 html {
 	height: 100%;
+    overflow-x: hidden;
 }
 
 body {
