@@ -177,6 +177,9 @@ io.on('connection', function(socket) {
   socket.on('play', function(data) {
     sessionID = parseID(data.cookies);
     game = getGame(sessionID);
+    if (game == undefined) {
+      return;
+    }
     if (sessionID == game.p1.sessionID) {
       game.m1 = data.move;
       game.s1 = socket;
