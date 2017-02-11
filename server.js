@@ -6,13 +6,23 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
 var path = require('path');
-var port = process.env.PORT || 8083;
+var port = process.env.PORT || 8092;
 
 var xss = require('xss');
 var logger = require('morgan');
 var cookie = require('cookie');
 
-var callbacks = {};
+callbacks = {};
+matchQueue = queueInit();
+
+users = {};
+games = [];
+
+function Game(p1, p2) {
+  this.p1 = p1;
+  this.p2 = p2;
+}
+
 function queueInit() {
   var mm = new Matchmaker;
 
@@ -21,14 +31,14 @@ function queueInit() {
   mm.prefs.maxiters = 50;
 
   mm.policy = function(a,b) {
-      return true;
+      return 100;
   }
 
   //@TODO(alex): Check to see if users have left disconnected
   mm.on('match', function(result) {
-    callbacks[result.a.sessionID](result.b.sessionID);
-    callbacks[result.b.sessionID](result.a.sessionID);
-    // console.log(result.a.sessionID + " has been matched with " + result.b.sessionID);
+    gameID = games.push(new Game(result.a, result.b)) - 1;
+    callbacks[result.a.sessionID](result.b.sessionID, gameID);
+    callbacks[result.b.sessionID](result.a.sessionID, gameID);
   });
 
   mm.start();
@@ -42,8 +52,8 @@ function getSessionID(req, res) {
     // random number
     sessionID = String(Math.random()).substring(2);
     // Redirect back after setting cookie
-    res.statusCode = 302;
-    res.setHeader('Location', req.headers.referer || '/');
+    // res.statusCode = 302;
+    // res.setHeader('Location', req.headers.referer || '/');
   }
   console.log('sessionID: ' + sessionID)
   res.setHeader('Set-Cookie', cookie.serialize('sessionID', sessionID, {
@@ -54,16 +64,29 @@ function getSessionID(req, res) {
   return sessionID;
 }
 
-matchQueue = queueInit();
-users = {};
+function getGame(sid) {
+  return games[users[sid].gameID];
+}
+
+function getOpponent(sid) {
+  var game = games[users[sid].gameID];
+  if (sid == game.p1.sessionID) {
+    return game.p2.sessionID;
+  }
+  else {
+    return game.p1.sessionID;
+  }
+}
 
 app.use(logger('dev')); // log every request to the console
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+names = ["Josh", "Joe", "Foo", "Bar"];
 app.get('/', function(req, res){
   var sessionID = getSessionID(req, res);
   if (!users[sessionID]) {
-    users[sessionID] = { name: "No name", sessionID: sessionID };
+    users[sessionID] = { name: names[Math.floor(Math.random() * (names.length))], sessionID: sessionID };
   }
   res.sendFile(__dirname + '/index.html');
 });
@@ -78,20 +101,30 @@ io.on('connection', function(socket) {
         l = xss(msg);
         console.log("User said: "+ l);
         io.emit('chat message', l);
-    });
+
     socket.on('new game', function(cookies){
       var sessionID = cookie.parse(cookies || '').sessionID;
       if (users[sessionID] && !callbacks[sessionID]) {
         matchQueue.push(users[sessionID]);
-        callbacks[sessionID] = function (opponentID) {
+        callbacks[sessionID] = function (opponentID, gameID) {
+          users[sessionID].gameID = gameID;
           socket.emit('matched', opponentID);
         };
       }
+      else if (callbacks[sessionID]) {
+        console.log("Somebody left the 'new game' button on the page after it's been pressed!")
+      }
       else {
+        console.log(users);
+        console.log(sessionID);
+        console.log(callbacks);
         socket.emit('invalid cookie');
       }
     });
-    socket.on('button press', function(msg){
+    socket.on('heartbeat', function(id) {
+
+    });
+    socket.on('button press', function(msg) {
         console.log('pressed');
     });
 });
