@@ -5,6 +5,12 @@
     padding: 0;
 }
 
+ul
+{
+    list-style-type: none;
+    margin-bottom: 10px;
+}
+
 .chat li
 {
     margin-bottom: 10px;
