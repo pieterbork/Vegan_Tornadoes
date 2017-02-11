@@ -6,7 +6,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
 var path = require('path');
-var port = process.env.PORT || 8092;
+var port = process.env.PORT || 8083;
 
 var xss = require('xss');
 var logger = require('morgan');
@@ -65,7 +65,12 @@ function getSessionID(req, res) {
 }
 
 function getGame(sid) {
-  return games[users[sid].gameID];
+  if(users[sid]) {
+    return games[users[sid].gameID];
+  }
+  else {
+
+  }
 }
 
 function getOpponent(sid) {
@@ -95,6 +100,10 @@ app.get('/chat', function(req, res){
     res.sendFile(__dirname + '/chat.html');
 });
 
+function parseID(cookies) {
+  return cookie.parse(cookies || '').sessionID;
+}
+
 // Chat Stuff
 io.on('connection', function(socket) {
     socket.on('chat message', function(msg){
@@ -104,7 +113,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('new game', function(cookies){
-      var sessionID = cookie.parse(cookies || '').sessionID;
+      var sessionID = parseID(cookies);
       if (users[sessionID] && !callbacks[sessionID]) {
         matchQueue.push(users[sessionID]);
         callbacks[sessionID] = function (opponentID, gameID) {
@@ -122,8 +131,17 @@ io.on('connection', function(socket) {
         socket.emit('invalid cookie');
       }
     });
+    socket.on('play', function(data) {
+      sessionID = parseID(data.cookies);
+      game = getGame(sessionID);
+      if (sessionID == game.p1.sessionID) {
+        game.m1 = data.move;
+      } else {
+        game.m2 = data.move;
+      }
+      console.log(JSON.stringify(game));
+    });
     socket.on('heartbeat', function(id) {
-
     });
     socket.on('button press', function(msg) {
         console.log('pressed');
