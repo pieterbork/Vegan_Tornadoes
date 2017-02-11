@@ -6,7 +6,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Matchmaker = require('matchmaker');
 var path = require('path');
-var im = require('imagemagick');
+// var im = require('imagemagick');
 var port = process.env.PORT || 8083;
 
 // stuff that came in handy before...
@@ -83,7 +83,7 @@ io.on('connection', function(socket) {
     });
     socket.on('new game', function(cookies){
       var sessionID = cookie.parse(cookies || '').sessionID;
-      if (users[sessionID]) {
+      if (users[sessionID] && !callbacks[sessionID]) {
         matchQueue.push(users[sessionID]);
         callbacks[sessionID] = function (opponentID) {
           socket.emit('matched', opponentID);
