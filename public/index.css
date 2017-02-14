@@ -2,34 +2,35 @@
   margin: 10px;
 }
 
-.chat
+#chat
 {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-ul
-{
-	margin-left: -40px;
-	list-style-type: none;
-	margin-bottom: 10px;
+#stats {
+    background-color: #f5f5f5;
 }
 
-.chat li
+#chatbox {
+    height: 65vh;
+}
+
+#chat li
 {
 	margin-bottom: 10px;
 	padding-bottom: 5px;
 	border-bottom: 1px dotted #B3A9A9;
 }
 
-.chat li .chat-body p
+#chat li .chat-body p
 {
 	margin: 0;
 	color: #777777;
 }
 
-.panel .slidedown .glyphicon, .chat .glyphicon
+.panel .slidedown .glyphicon, #chat .glyphicon
 {
 	margin-right: 5px;
 }
@@ -69,10 +70,10 @@ html {
 }
 
 body {
-      -moz-transform: scale(1.125);
+/*      -moz-transform: scale(1.125);
       -webkit-transform: scale(1.125);
-      -ms-transform: scale(1.125);
-      transform: scale(1.125);
+      -ms-transform: scale(1.125); 
+      transform: scale(1.125); */
       -moz-transition: -moz-transform 0.325s ease-in-out, -moz-filter 0.325s ease-in-out;
       -webkit-transition: -webkit-transform 0.325s ease-in-out, -webkit-filter 0.325s ease-in-out;
       -ms-transition: -ms-transform 0.325s ease-in-out, -ms-filter 0.325s ease-in-out;

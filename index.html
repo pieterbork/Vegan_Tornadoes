@@ -1,63 +1,78 @@
 <!doctype html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>Socket.IO chat</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-  </head>
-  <body>
-    <div style="float: center; width: 50%; height: 50%; text-align: center;">
-      <div id="controls" style="display: inline-block;">
-        <div id="no_game">
-          <button type="button" class="btn btn-warning" onclick="new_game();">New game</button>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Vegan Tornadoes</a>
+            </div>
         </div>
-        <div id="waiting" style="display: none;">
-          <button class='btn btn-warning'>Looking for game...</button>
-        </div>
-        <div id="in_game" style="display: none;">
-          <button type='button' id='rock' class='btn btn-warning' onclick='play("rock");'>Rock</button>
-          <button type='button' id='paper' class='btn btn-warning' onclick='play("paper");'>Paper</button>
-          <button type='button' id='scissors' class='btn btn-warning' onclick='play("scissors");'>Scissors</button>
-        </div>
-        <button type='button' id='outcome' class='btn btn-warning' style='display: none;'></button>
-      </div>
-    </div>
-    <div style="float: right; width: 50%">
-<div class="container">
-    <div class="row">
-        <div class="col-md-5">
-            <div class="panel panel-primary">
-                <div class="panel-heading" id="accordion">
-                    <span class="glyphicon glyphicon-comment"></span> Chat
-                    <div class="btn-group pull-right">
-                        <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </a>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div id="controls" class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="no_game">
+                            <button type="button" class="btn btn-warning" onclick="new_game();">New game</button>
+                            </div>
+                            <div id="waiting" style="display: none;">
+                            <button class='btn btn-warning'>Looking for game...</button>
+                            </div>
+                            <div id="in_game" style="display: none;">
+                            <button type='button' id='rock' class='btn btn-warning' onclick='play("rock");'>Rock</button>
+                            <button type='button' id='paper' class='btn btn-warning' onclick='play("paper");'>Paper</button>
+                            <button type='button' id='scissors' class='btn btn-warning' onclick='play("scissors");'>Scissors</button>
+                        </div>
+                        <button type='button' id='outcome' class='btn btn-warning' style='display: none;'></button>
                     </div>
-                </div>
-            <div class="panel-collapse collapse in" id="collapseOne">
-                <div class="panel-body" id="chatbox">
-                    <ul id="chat">
-                    </ul>
-                </div>
-                <div class="panel-footer">
-                    <div class="input-group col-sm-12">
-                        <form action="">
-                            <input id="m" autocomplete="off" class="form-control input-sm" placeholder="Type your message here..." />
-                        </form>
+                    <div id="stats" class="col-md-5">
+                        <div>Your username is <span id="username"></span></div>
+                        <div>There are this many users active <span id="userCount"></span></div>
+                        <div>There are this many users searching <span id="searchCount"</span></div>
+                        <div>Wins: <span id="wins">0</span></div>
+                        <div>Losses: <span id="losses">0</span></div>
+                        <div>Ties: <span id="ties">0</span></div>
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading" id="accordion">
+                        <span class="glyphicon glyphicon-comment"></span> Chat
+                        <div class="btn-group pull-right">
+                            <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <span class="glyphicon glyphicon-chevron-down"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-collapse collapse in" id="collapseOne">
+                        <div class="panel-body" id="chatbox">
+                            <ul id="chat">
+                            </ul>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="input-group col-sm-12">
+                                <form action="">
+                                    <input id="m" autocomplete="off" class="form-control input-sm" placeholder="Type your message here..." />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-        </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="script.js"></script>
-  <link rel="stylesheet" href="index.css">
-  </body>
+    <link rel="stylesheet" href="index.css">
+</body>
 </html>

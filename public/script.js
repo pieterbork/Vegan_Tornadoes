@@ -9,6 +9,11 @@ function getDateTime() {
     return hour+":"+min;
 }
 
+function updateScroll(){
+	var element = document.getElementById("chatbox");
+	element.scrollTop = element.scrollHeight;
+}
+
 var socket = io();
 $('form').submit(function(){
     socket.emit('chat message', name, $('#m').val());
@@ -17,18 +22,22 @@ $('form').submit(function(){
 });
 
 socket.on('chat message', function(user, msg){
-	$('#chat').append('<li class=\"left clearfix\"><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">'+user+'</strong><small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>'+ getDateTime() +'</small></div><p>'+ "&nbsp&nbsp" + (msg) + '</p></div></li>');
+	$('#chat').append('<li><div class="chat-body"><strong class="primary-font">'+user+'</strong><small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span>'+ getDateTime() +'</small><p>' + msg + '</p></div></li>');
 	updateScroll();
 });
-
-function updateScroll(){
-	var element = document.getElementById("chatbox");
-	element.scrollTop = element.scrollHeight;
-}
 
 socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg));
 });
+
+
+socket.on('userCount', function(count) {
+    $('#userCount').text(count);
+});
+socket.on('searchCount', function(count) {
+    $('#searchCount').text(count);
+});
+
 
 socket.on('matched', function(opponentID){
   $('#no_game').css('display', 'none');
@@ -56,24 +65,40 @@ socket.on('draw', function(imagedata){
     img.src = src;
 });
 
-socket.on('game over', function(win) {
-  $('#no_game').css('display', '');
-  $('#in_game').css('display', 'none');
-  $('#waiting').css('display', 'none');
-  $('#outcome').css('display', '');
-  $('#outcome').text("You " + win + "!");
+socket.on('game over', function(result) {
+    $('#no_game').css('display', '');
+    $('#in_game').css('display', 'none');
+    $('#waiting').css('display', 'none');
+    $('#outcome').css('display', '');
+    $('#outcome').text("You " + result + "!");
+    wins = parseInt($("#wins").text());
+    losses = parseInt($("#losses").text());
+    ties = parseInt($("#ties").text())
+    
+    if(result == "won") {
+        wins++
+        $("#wins").text(wins);
+    }
+    else if(result == "lost") {
+        losses++;
+        $("#losses").text(losses);
+    }
+    else {
+        ties++;
+        $("#ties").text(ties);
+    }
 });
 
 
 function new_game() {
-  socket.emit('new game', document.cookie);
-  $('#outcome').css('display', 'none');
-  $('#no_game').css('display', 'none');
-  $('#in_game').css('display', 'none');
-  $('#waiting').css('display', '');
-  $('#rock').css('display', '');
-  $('#paper').css('display', '');
-  $('#scissors').css('display', '');
+    socket.emit('new game', document.cookie);
+    $('#outcome').css('display', 'none');
+    $('#no_game').css('display', 'none');
+    $('#in_game').css('display', 'none');
+    $('#waiting').css('display', '');
+    $('#rock').css('display', '');
+    $('#paper').css('display', '');
+    $('#scissors').css('display', '');
 }
 
 function play(m) {
@@ -90,7 +115,8 @@ function play(m) {
 }
 
 socket.on('name', function(n) {
-  name = n;
+    $("#username").text(n);
+    name = n;
 });
 
 socket.emit('get name', document.cookie);
