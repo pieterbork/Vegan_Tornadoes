@@ -38,11 +38,11 @@ socket.on('searchCount', function(count) {
     $('#searchCount').text(count);
 });
 
-
-socket.on('matched', function(opponentID){
+socket.on('matched', function(opponent_name){
   $('#no_game').css('display', 'none');
   $('#in_game').css('display', '');
   $('#waiting').css('display', 'none');
+  $('#opponent').text("You were matched against: " + opponent_name);
 });
 
 socket.on('invalid cookie', function() {

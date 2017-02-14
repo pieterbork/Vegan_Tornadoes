@@ -97,17 +97,17 @@ function getOpponent(sid) {
 app.use(logger('dev')); // log every request to the console
 app.use(express.static(path.join(__dirname, 'public')));
 
-adjectives = ["Sexy", "Fuzzy", "Purple", "Deadly", "Sparkly", "Flatulent", "Hidden", "Crouching", "Dishonorable", "Tiny", "Chunky", "Bubbly", "Lame", "Dashing", "Creepy", "Beautiful", "Luxurious", "Fancy", "Cute"]
-nouns = ["Josh", "Sidewalk", "Pizza", "Tiger", "Turtle", "Water", "Ninja", "Pirate", "DJ", "Spaceship", "Eagle", "Carlos"];
+adjectives = ["Sexy", "Fuzzy", "Purple", "Deadly", "Sparkly", "Flatulent", "Hidden", "Crouching", "Dishonorable", "Tiny", "Chunky", "Bubbly", "Lame", "Dashing", "Creepy", "Beautiful", "Luxurious", "Fancy", "Cute", "Offended", "Psychadelic", "Ripped", "Goopy", "Wascilly"];
+nouns = ["Josh", "Sidewalk", "Pizza", "Tiger", "Turtle", "Water", "Ninja", "Pirate", "DJ", "Spaceship", "Eagle", "Carlos", "Bottle", "Clock", "Eiffel Tower", "Sunglasses", "Wabbit", "Powerpoint", "Dragon"];
 
-app.get('/', function(req, res) {
-    var sessionID = getSessionID(req, res);
-    if (!users[sessionID]) {
-        noun = nouns[Math.floor(Math.random() * (nouns.length))]
-        adj = adjectives[Math.floor(Math.random() * (adjectives.length))]
-        users[sessionID] = { name: adj + " " + noun, sessionID: sessionID };
-    }
-    res.sendFile(__dirname + '/index.html');
+app.get('/', function(req, res){
+  var sessionID = getSessionID(req, res);
+  if (!users[sessionID]) {
+    noun = nouns[Math.floor(Math.random() * (nouns.length))]
+    adj = adjectives[Math.floor(Math.random() * (adjectives.length))]
+    users[sessionID] = { name: adj + " " + noun, sessionID: sessionID };
+  }
+  res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/chat', function(req, res){
